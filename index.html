@@ -1,21 +1,23 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Nguyen Van A</title>
+    <title>GiangNT's Resume</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div id="container">
-    <h1>Nguyen Van A</h1>
+    <h1>Nguyen Truong Giang</h1>
     <div id="name">
         <p>Backend Developer</p>
     </div> <!-- end of name div -->
     <div id="skills">
         <h2>Skills</h2>
-        <li>Typescript</li>
-        <li>Go</li>
-        <li>RESTful API</li>
-        <li>Docker</li>
-        <li>AWS</li>
+        <li>Typescript, Go</li>
+        <li>REST API, gRPC</li>
+        <li>ExpressJS, NestJS, Iris Web Framework</li>
+        <li>MySQL, AWS DynamoDB, Redis</li>
+        <li>Docker, Docker Compose</li>
+        <li>AWS CloudFormation, Terraform</li>
     </div>
     <!-- added an education div -->
     <div id="education">
@@ -25,32 +27,35 @@
     <div id="projects">
         <h2>Projects</h2>
         <div class="project">
-            <h3>Todo App</h3>
-            <p>A simple todo app that allows users to create, update, delete and mark tasks as done.</p>
-            <p>Built with Typescript, Express and MongoDB.</p>
-            <p>Deployed on AWS using Docker and ECS.</p>
+            <h3>Mobile Web</h3>
+            <p>A project to renew and modernize the customer website for mobile devices</p>
+            <p>Using NestJS for Backend and NextJS for Frontend in Typescript, gRPC Gateway in Go</p>
+            <p>Backend serves the static files built from Frontend, handles login request integrating with OAuth, manages user session and proxies REST API requests to gRPC gateway</p>
+            <p>gRPC gateway converts REST API requests to gRPC and transfers them to the gRPC server</p>
+            <p>Swagger UI and REST API Client (in Typescript) generated from Proto files</p>
+            <p>Using Docker and AWS ECS for development/staging and On-promise for production</p>
+            <p>Using Datadog for monitoring and Lighthouse for auditing performance</p>
         </div>
-        <div class="project">
-            <h3>Chat App</h3>
-            <p>A real-time chat app that allows users to send and receive messages in different rooms.</p>
-            <p>Built with Go, Gorilla WebSocket and Redis.</p>
-            <p>Deployed on AWS using Docker and EC2.</p>
-        </div>
-        <div class="project">
-            <h3>Movie App</h3>
-            <p>A movie app that allows users to browse, search and rate movies.</p>
-            <p>Built with Go, Gin and PostgreSQL.</p>
-            <p>Deployed on AWS using Docker and RDS.</p>
-        </div>
+<!--        <div class="project">-->
+<!--            <h3>Chat App</h3>-->
+<!--            <p>A real-time chat app that allows users to send and receive messages in different rooms.</p>-->
+<!--            <p>Built with Go, Gorilla WebSocket and Redis.</p>-->
+<!--            <p>Deployed on AWS using Docker and EC2.</p>-->
+<!--        </div>-->
+<!--        <div class="project">-->
+<!--            <h3>Movie App</h3>-->
+<!--            <p>A movie app that allows users to browse, search and rate movies.</p>-->
+<!--            <p>Built with Go, Gin and PostgreSQL.</p>-->
+<!--            <p>Deployed on AWS using Docker and RDS.</p>-->
+<!--        </div>-->
     </div>
 
     <!-- added a contact div -->
     <div id="contact">
         <h2>Contact</h2>
 
-        <p>Email: example@gmail.com</p>
-        <p>Phone: 0123456789</p>
-        <p>Address: 123 Nguyễn Văn Cừ, Quận 5, TP.HCM</p>
+        <p>Email: giangnt2020@gmail.com</p>
+        <p>Phone: +84394477196</p>
 
         <a href="#"><img src="images/facebook.png" alt="Facebook" width="48" height="48"></a>
         <a href="#"><img src="images/linkedin.png" alt="LinkedIn" width="48" height="48"></a>
