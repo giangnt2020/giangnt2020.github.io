@@ -1,16 +1,175 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>BacBling.com.vn</title>
-    <link rel="icon" type="image/x-icon" href="images/favicon.ico">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Soccer Ball Runner</title>
+  <style>
+      body { text-align: center; font-family: Arial, sans-serif; }
+      canvas { display: block; margin: auto; border: 1px solid #000; }
+      #stats { margin-top: 10px; font-size: 18px; }
+      #instructions { margin-top: 10px; font-size: 16px; color: #555; }
+      #contact { margin-top: 20px; font-size: 14px; color: #333; }
+  </style>
 </head>
 <body>
-<div id="container">
-    <div id="contact">
-        <h2>Contact</h2>
-        <p>Email: giangnt2020@gmail.com</p>
-    </div>
-</div>
+<h1>Soccer Ball Runner</h1>
+<p id="instructions">Nhấn phím Space hoặc Click để nhảy qua các cầu thủ. Cố gắng đạt điểm số cao nhất!</p>
+<canvas id="gameCanvas" width="800" height="200"></canvas>
+<div id="stats">Lượt chơi: 0 | Điểm cao nhất: 0 | Điểm hiện tại: 0</div>
+<p id="contact">Liên hệ: giangnt2020@gmail.com</p>
+<script>
+	const canvas = document.getElementById("gameCanvas");
+	const ctx = canvas.getContext("2d");
+	const stats = document.getElementById("stats");
+
+	const playerTypes = ["⚽", "🥎", "🏀", "🏈", "🎾"];
+	let player = {
+		x: 50,
+		y: 160,
+		width: 20,
+		height: 20,
+		dy: 0,
+		gravity: 0.5,
+		jumpPower: -10,
+		jumpCount: 0,
+		maxJumps: 2,
+		icon: playerTypes[Math.floor(Math.random() * playerTypes.length)]
+	};
+
+	let obstacles = [];
+	let birds = [];
+	let clouds = [{ x: 600, y: 33 }, { x: 300, y: 30 }, { x: 800, y: 32 }];
+	let sun = { x: 550, y: 50 };
+	let frame = 0;
+	let score = 0;
+	let gameRunning = true;
+	let obstacleSpeed = 5;
+	let playCount = localStorage.getItem("playCount") || 0;
+	let highScore = localStorage.getItem("highScore") || 0;
+	const obstacleIcons = ["🏃", "🤾", "🏌️", "🥅", "🤸", "🚴", "🏊", "⛹️", "🏂"];
+	const birdIcons = ["🕊️", "🦅", "🦆", "🦉"];
+
+	function updateStats() {
+		stats.textContent = `Lượt chơi: ${playCount} | Điểm cao nhất: ${highScore} | Điểm hiện tại: ${score}`;
+	}
+
+	function drawBackground() {
+		ctx.fillStyle = "#87CEEB";
+		ctx.fillRect(0, 0, canvas.width, 170);
+		ctx.fillStyle = "#4CAF50";
+		ctx.fillRect(0, 170, canvas.width, 30);
+		ctx.font = "30px Arial";
+		ctx.fillText("☀️", sun.x, sun.y);
+		clouds.forEach(cloud => ctx.fillText("☁️", cloud.x, cloud.y));
+	}
+
+	function drawPlayer() {
+		ctx.font = "20px Arial";
+		ctx.fillText(player.icon, player.x, player.y + player.height);
+	}
+
+	function drawObstacles() {
+		ctx.font = "40px Arial";
+		obstacles.forEach(obs => {
+			ctx.fillText(obs.icon, obs.x, obs.y + obs.height);
+		  ctx.strokeStyle = "red";
+		  ctx.strokeRect(obs.x, obs.y, 30, obs.height);
+		});
+	}
+
+  function drawBirds() {
+	  ctx.font = "25px Arial";
+	  birds.forEach(bird => {
+		  ctx.fillText(bird.icon, bird.x, bird.y + 20);
+		  ctx.strokeRect(bird.x, bird.y, 25, 25);
+	  });
+  }
+
+  function updateObstacles() {
+	  if (frame % Math.max(50, 100 - Math.floor(score / 10)) === 0) {
+		  let fontSize = 40;
+		  let icon = obstacleIcons[Math.floor(Math.random() * obstacleIcons.length)];
+		  obstacles.push({ x: canvas.width, y: 170 - fontSize, width: fontSize, height: fontSize, icon: icon });
+	  }
+	  obstacles.forEach(obs => obs.x -= obstacleSpeed);
+	  obstacles = obstacles.filter(obs => obs.x + obs.width > 0);
+  }
+
+	function updateBirds() {
+		if (frame % 200 === 0) {
+			let icon = birdIcons[Math.floor(Math.random() * birdIcons.length)];
+			birds.push({ x: canvas.width, y: 30 + Math.random() * 40, width: 25, height: 25, icon: icon });
+		}
+		birds.forEach(bird => bird.x -= obstacleSpeed);
+		birds = birds.filter(bird => bird.x + bird.width > 0);
+	}
+
+	function updateClouds() {
+		clouds.forEach(cloud => cloud.x -= 1);
+		clouds = clouds.map(cloud => (cloud.x < -50 ? { x: canvas.width, y: cloud.y } : cloud));
+	}
+
+	function updatePlayer() {
+		player.y += player.dy;
+		player.dy += player.gravity;
+		if (player.y >= 160) {
+			player.y = 160;
+			player.jumpCount = 0;
+		}
+	}
+
+	function checkCollision() {
+		obstacles.concat(birds).forEach(obj => {
+			if (player.x < obj.x + obj.width && player.x + player.width > obj.x &&
+				player.y < obj.y + obj.height && player.y + player.height > obj.y) {
+				gameRunning = false;
+			}
+		});
+	}
+
+	function gameLoop() {
+		if (!gameRunning) {
+			playCount++;
+			localStorage.setItem("playCount", playCount);
+			if (score > highScore) {
+				highScore = score;
+				localStorage.setItem("highScore", highScore);
+			}
+			updateStats();
+			alert("Game Over! Score: " + score);
+			document.location.reload();
+			return;
+		}
+		frame++;
+		score++;
+		obstacleSpeed = 5 + Math.floor(score / 100);
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		drawBackground();
+		drawPlayer();
+		drawObstacles();
+		drawBirds();
+		updateObstacles();
+		updateBirds();
+		updateClouds();
+		updatePlayer();
+		checkCollision();
+		updateStats();
+		requestAnimationFrame(gameLoop);
+	}
+
+	function jump() {
+		if (player.jumpCount < player.maxJumps) {
+			player.dy = player.jumpPower;
+			player.jumpCount++;
+		}
+	}
+
+	document.addEventListener("keydown", (e) => { if (e.code === "Space") jump(); });
+	document.addEventListener("click", jump);
+
+	updateStats();
+	gameLoop();
+</script>
 </body>
 </html>
