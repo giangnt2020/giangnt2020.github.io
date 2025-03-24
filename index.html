@@ -90,8 +90,6 @@
 		ctx.font = "40px Arial";
 		obstacles.forEach(obs => {
 			ctx.fillText(obs.icon, obs.x, obs.y + obs.height);
-		  ctx.strokeStyle = "red";
-		  ctx.strokeRect(obs.x, obs.y, 30, obs.height);
 		});
 	}
 
@@ -99,7 +97,6 @@
 	  ctx.font = "25px Arial";
 	  birds.forEach(bird => {
 		  ctx.fillText(bird.icon, bird.x, bird.y + 20);
-		  ctx.strokeRect(bird.x, bird.y, 25, 25);
 	  });
   }
 
